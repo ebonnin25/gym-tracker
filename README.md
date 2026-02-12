@@ -25,5 +25,5 @@ display one table : `SELECT * FROM "TableName`
 quit : `\q`  
 
 ### MIGRATIONS
-create migration : `dotnet ef migrations add EntityName`  
+create migration : `dotnet ef migrations add MigrationName`  
 update database : `dotnet ef database update`  

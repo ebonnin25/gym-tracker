@@ -23,9 +23,16 @@ public class UserService
         }).ToList();
     }
 
-    public async Task CreateUserAsync(string username, string email)
+    public async Task<UserDTO> CreateUserAsync(string username, string email, string passwordHash)
     {
-        var user = new User(username, email);
+        var user = new User(username, email, passwordHash);
         await _repository.AddAsync(user);
+
+        return new UserDTO
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        };
     }
 }
