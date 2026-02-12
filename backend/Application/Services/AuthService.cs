@@ -1,9 +1,9 @@
 using backend.Domain;
 using backend.Application.DTOs;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using BCrypt.Net;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace backend.Application;
 
@@ -56,4 +56,49 @@ public class AuthService
             Email = user.Email
         };
     }
+
+    public async Task<AuthResponseDTO> LoginAsync(LoginUserDTO dto, string jwtKey, string issuer, string audience)
+    {
+        var users = await _userRepository.GetAllAsync();
+        var user = users.FirstOrDefault(u => u.Email == dto.Email);
+
+        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            throw new Exception("Invalid credentials");
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(jwtKey);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Username)
+            }),
+            Expires = DateTime.UtcNow.AddHours(2),
+            Issuer = issuer,
+            Audience = audience,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
+
+        return new AuthResponseDTO
+        {
+            User = new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            },
+            Token = tokenString
+        };
+    }
+
+
+
+
+
 }

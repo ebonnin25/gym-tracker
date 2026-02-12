@@ -35,4 +35,18 @@ public class UserService
             Email = user.Email
         };
     }
+
+    public async Task<UserDTO> GetUserByIdAsync(Guid id)
+    {
+        var user = await _repository.GetByIdAsync(id);
+        if (user == null) throw new Exception("User not found");
+
+        return new UserDTO
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        };
+    }
+
 }
