@@ -11,7 +11,6 @@ public class AuthService
 {
     private readonly UserService _userService;
     private readonly IUserRepository _userRepository;
-
     public AuthService(UserService userService, IUserRepository userRepository)
     {
         _userService = userService;

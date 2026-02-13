@@ -7,11 +7,7 @@ namespace backend.Application.Services;
 public class UserService
 {
     private readonly IUserRepository _repository;
-
-    public UserService(IUserRepository repository)
-    {
-        _repository = repository;
-    }
+    public UserService(IUserRepository repository) => _repository = repository;
 
     public async Task<List<UserDTO>> GetAllUsersAsync()
     {

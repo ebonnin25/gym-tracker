@@ -12,11 +12,7 @@ namespace backend.Controllers;
 public class ExerciseController : ControllerBase
 {
     private readonly ExerciseService _service;
-
-    public ExerciseController(ExerciseService service)
-    {
-        _service = service;
-    }
+    public ExerciseController(ExerciseService service) => _service = service;
 
     [HttpGet]
     public async Task<IActionResult> GetAll()

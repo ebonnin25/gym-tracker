@@ -5,5 +5,9 @@ namespace backend.Domain.Repositories;
 public interface IMuscleRepository
 {
     Task<List<Muscle>> GetAllAsync();
-    Task AddAsync(Muscle muscle);
+    Task<Muscle?> GetByIdAsync(Guid id);
+    Task<Muscle> AddAsync(Muscle muscle);
+    Task<Muscle> UpdateAsync(Muscle muscle);
+    Task DeleteAsync(Guid id);
+    Task<bool> ExistsByNameAsync(string name);
 }
