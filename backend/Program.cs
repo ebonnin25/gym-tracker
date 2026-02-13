@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using backend.Domain;
-using backend.Infrastructure;
-using backend.Application;
+using backend.Domain.Repositories;
+using backend.Infrastructure.Persistence;
+using backend.Application.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -15,8 +15,13 @@ builder.Services.AddDbContext<GymContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
+builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
+
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<MuscleService>();
+builder.Services.AddScoped<ExerciseService>();
 
 builder.Services.AddCors(options =>
 {

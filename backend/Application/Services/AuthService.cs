@@ -1,11 +1,11 @@
-using backend.Domain;
+using backend.Domain.Repositories;
 using backend.Application.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace backend.Application;
+namespace backend.Application.Services;
 
 public class AuthService
 {
@@ -96,9 +96,4 @@ public class AuthService
             Token = tokenString
         };
     }
-
-
-
-
-
 }

@@ -1,4 +1,4 @@
-namespace backend.Domain;
+namespace backend.Domain.Entities;
 
 public class User
 {
@@ -7,7 +7,10 @@ public class User
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
 
-    private User() { } // EF Core
+    public ICollection<Exercise> Exercises { get; set; }
+        = new List<Exercise>();
+
+    private User() { }
 
     public User(string username, string email, string passwordHash)
     {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using backend.Infrastructure.Persistence;
 namespace backend.Migrations
 {
     [DbContext(typeof(GymContext))]
-    partial class GymContextModelSnapshot : ModelSnapshot
+    [Migration("20260213093035_AddExerciseAndMuscle")]
+    partial class AddExerciseAndMuscle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,63 +79,6 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Muscles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bae51a45-0eb0-4e51-97ae-e70bbe009eb6"),
-                            Name = "Pectoraux"
-                        },
-                        new
-                        {
-                            Id = new Guid("c8498283-5483-491f-adbc-9dad4d591196"),
-                            Name = "Dos"
-                        },
-                        new
-                        {
-                            Id = new Guid("66cefe28-52e3-46bc-8fc6-2c52090b1922"),
-                            Name = "Épaules"
-                        },
-                        new
-                        {
-                            Id = new Guid("9a1fda82-7bcb-432f-85b6-d79c9bee783d"),
-                            Name = "Biceps"
-                        },
-                        new
-                        {
-                            Id = new Guid("992bf433-2f92-4569-ac29-85b8f7066ff9"),
-                            Name = "Triceps"
-                        },
-                        new
-                        {
-                            Id = new Guid("fcb9abb3-2715-4d5a-b0db-30c82dc1f60a"),
-                            Name = "Quadriceps"
-                        },
-                        new
-                        {
-                            Id = new Guid("cf5d0331-4cca-4b0e-887d-8f453cf497a3"),
-                            Name = "Ischios"
-                        },
-                        new
-                        {
-                            Id = new Guid("9bb5a066-0706-4dd1-8faa-a07700e5a50f"),
-                            Name = "Fessiers"
-                        },
-                        new
-                        {
-                            Id = new Guid("62cc5531-ebdb-4b8e-8227-505c300285cc"),
-                            Name = "Mollets"
-                        },
-                        new
-                        {
-                            Id = new Guid("6b93f3f6-73bb-4147-83c3-401c5a698b2a"),
-                            Name = "Abdos"
-                        },
-                        new
-                        {
-                            Id = new Guid("7490b915-3115-4898-b86a-1855c095e814"),
-                            Name = "Lombaires"
-                        });
                 });
 
             modelBuilder.Entity("backend.Domain.Entities.User", b =>

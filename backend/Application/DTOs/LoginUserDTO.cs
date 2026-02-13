@@ -1,3 +1,5 @@
+namespace backend.Application.DTOs;
+
 public class LoginUserDTO
 {
     public string Email { get; set; } = string.Empty;

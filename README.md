@@ -18,10 +18,11 @@ run : `dotnet run`
 run with hotreload : `dotnet watch run`
 
 ### DATABASE
-connecting bd : `psql -U postgres -h localhost -d gym`  
+connecting bd : `psql -U postgres -h localhost -d gym` (mdp: azertt)  
 show databases : `\list`  
 show tables : `\dt`  
-display one table : `SELECT * FROM "TableName`  
+show columns of a table : `\d "TableName"`  
+display one table : `SELECT * FROM "TableName"`  
 quit : `\q`  
 
 ### MIGRATIONS

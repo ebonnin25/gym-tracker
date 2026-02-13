@@ -1,6 +1,8 @@
-using backend.Domain;
+using backend.Domain.Repositories;
+using backend.Domain.Entities;
+using backend.Application.DTOs;
 
-namespace backend.Application;
+namespace backend.Application.Services;
 
 public class UserService
 {

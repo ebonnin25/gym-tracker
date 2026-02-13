@@ -1,4 +1,6 @@
-namespace backend.Domain;
+using backend.Domain.Entities;
+
+namespace backend.Domain.Repositories;
 
 public interface IUserRepository
 {
