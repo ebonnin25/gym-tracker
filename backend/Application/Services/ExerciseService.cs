@@ -18,13 +18,32 @@ public class ExerciseService
             Id = e.Id,
             Name = e.Name,
             Description = e.Description,
-            CreatedAt = e.CreatedAt,
             Muscles = e.ExerciseMuscles.Select(em => new MuscleDTO
             {
                 Id = em.Muscle.Id,
                 Name = em.Muscle.Name
             }).ToList()
         }).ToList();
+    }
+
+    public async Task<ExerciseDTO?> GetByIdAsync(Guid userId, Guid exerciseId)
+    {
+        var exercise = await _repository.GetByIdWithMusclesAsync(exerciseId);
+
+        if (exercise == null || exercise.UserId != userId)
+            return null;
+
+        return new ExerciseDTO
+        {
+            Id = exercise.Id,
+            Name = exercise.Name,
+            Description = exercise.Description,
+            Muscles = exercise.ExerciseMuscles.Select(em => new MuscleDTO
+            {
+                Id = em.Muscle.Id,
+                Name = em.Muscle.Name
+            }).ToList()
+        };
     }
 
     public async Task<ExerciseDTO> CreateAsync(Guid userId, CreateExerciseDTO dto)
@@ -35,6 +54,11 @@ public class ExerciseService
             Name = dto.Name,
             Description = dto.Description
         };
+
+        if(dto.MuscleIds == null || !dto.MuscleIds.Any())
+            throw new InvalidOperationException("At least one muscle must be selected.");
+        if(dto.MuscleIds.Distinct().Count() != dto.MuscleIds.Count)
+            throw new InvalidOperationException("Each muscle can only be selected once.");
 
         foreach (var muscleId in dto.MuscleIds)
         {
@@ -52,12 +76,61 @@ public class ExerciseService
             Id = createdExercise.Id,
             Name = createdExercise.Name,
             Description = createdExercise.Description,
-            CreatedAt = createdExercise.CreatedAt,
             Muscles = createdExercise.ExerciseMuscles.Select(em => new MuscleDTO
             {
                 Id = em.MuscleId,
                 Name = em.Muscle.Name
             }).ToList()
         };
+    }
+
+    public async Task<ExerciseDTO> UpdateAsync(Guid exerciseId, UpdateExerciseDTO dto)
+    {
+        var exercise = await _repository.GetByIdWithMusclesAsync(exerciseId)
+            ?? throw new KeyNotFoundException("Exercise not found.");
+
+        if(await _repository.ExistsByNameAsync(exercise.UserId, dto.Name, exerciseId))
+            throw new InvalidOperationException("The name of the exercise already exists.");
+
+        if(dto.MuscleIds == null || !dto.MuscleIds.Any())
+            throw new InvalidOperationException("At least one muscle must be selected.");
+        if(dto.MuscleIds.Distinct().Count() != dto.MuscleIds.Count)
+            throw new InvalidOperationException("Each muscle can only be selected once..");
+
+        exercise.Name = dto.Name;
+        exercise.Description = dto.Description;
+
+        exercise.ExerciseMuscles.Clear();
+        foreach(var muscleId in dto.MuscleIds)
+        {
+            exercise.ExerciseMuscles.Add(new ExerciseMuscle
+            {
+                ExerciseId = exercise.Id,
+                MuscleId = muscleId
+            });
+        }
+
+        var updatedExercise = await _repository.UpdateAsync(exercise);
+
+        return new ExerciseDTO
+        {
+            Id = updatedExercise.Id,
+            Name = updatedExercise.Name,
+            Description = updatedExercise.Description,
+            Muscles = updatedExercise.ExerciseMuscles.Select(em => new MuscleDTO
+            {
+                Id = em.Muscle.Id,
+                Name = em.Muscle.Name
+            }).ToList()
+        };
+    }
+
+    public async Task DeleteAsync(Guid exerciseId)
+    {
+        var exercise = await _repository.GetByIdAsync(exerciseId);
+        if(exercise == null)
+            throw new KeyNotFoundException("Exercise not found.");
+
+        await _repository.DeleteAsync(exerciseId);
     }
 }

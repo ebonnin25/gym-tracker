@@ -8,10 +8,7 @@ public class UserRepository : IUserRepository
 {
     private readonly GymContext _context;
 
-    public UserRepository(GymContext context)
-    {
-        _context = context;
-    }
+    public UserRepository(GymContext context) => _context = context;
 
     public async Task<List<User>> GetAllAsync()
     {

@@ -1,9 +1,8 @@
 namespace backend.Application.DTOs;
 
-public class ExerciseDTO
+public class UpdateExerciseDTO
 {
-    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
-    public List<MuscleDTO> Muscles { get; set; } = new();
+    public List<Guid> MuscleIds { get; set; } = new List<Guid>();
 }

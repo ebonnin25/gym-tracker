@@ -7,10 +7,7 @@ namespace backend.Infrastructure.Persistence;
 public class MuscleRepository : IMuscleRepository
 {
     private readonly GymContext _context;
-    public MuscleRepository(GymContext context) 
-    {
-        _context = context;
-    }
+    public MuscleRepository(GymContext context) => _context = context;
 
     public async Task<List<Muscle>> GetAllAsync() 
         => await _context.Muscles.ToListAsync();
