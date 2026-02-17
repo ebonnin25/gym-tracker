@@ -17,11 +17,13 @@ builder.Services.AddDbContext<GymContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
 builder.Services.AddScoped<IExerciseRepository, ExerciseRepository>();
+builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<MuscleService>();
 builder.Services.AddScoped<ExerciseService>();
+builder.Services.AddScoped<SessionService>();
 
 builder.Services.AddCors(options =>
 {

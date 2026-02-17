@@ -7,8 +7,7 @@ public class User
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
 
-    public ICollection<Exercise> Exercises { get; set; }
-        = new List<Exercise>();
+    public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
 
     private User() { }
 

@@ -11,24 +11,38 @@ public class GymContext : DbContext
     public DbSet<Exercise> Exercises => Set<Exercise>();
     public DbSet<Muscle> Muscles => Set<Muscle>();
     public DbSet<ExerciseMuscle> ExerciseMuscles => Set<ExerciseMuscle>();
+    public DbSet<Session> Sessions => Set<Session>();
+    public DbSet<SessionExercise> SessionExercises => Set<SessionExercise>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // ExerciseMuscle : many-to-many
         modelBuilder.Entity<ExerciseMuscle>()
             .HasKey(em => new { em.ExerciseId, em.MuscleId });
-
         modelBuilder.Entity<ExerciseMuscle>()
             .HasOne(em => em.Exercise)
             .WithMany(e => e.ExerciseMuscles)
             .HasForeignKey(em => em.ExerciseId);
-
         modelBuilder.Entity<ExerciseMuscle>()
             .HasOne(em => em.Muscle)
             .WithMany(m => m.ExerciseMuscles)
             .HasForeignKey(em => em.MuscleId);
 
+        // SessionExercise : many-to-many + payload
+        modelBuilder.Entity<SessionExercise>()
+            .HasKey(se => new { se.SessionId, se.ExerciseId });
+        modelBuilder.Entity<SessionExercise>()
+            .HasOne(se => se.Session)
+            .WithMany(s => s.SessionExercises)
+            .HasForeignKey(se => se.SessionId);
+        modelBuilder.Entity<SessionExercise>()
+            .HasOne(se => se.Exercise)
+            .WithMany()
+            .HasForeignKey(se => se.ExerciseId);
+
+        // User constraints
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();

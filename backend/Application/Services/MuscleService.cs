@@ -19,6 +19,14 @@ public class MuscleService
         }).ToList();
     }
 
+    public async Task<MuscleDTO?> GetByIdAsync(Guid id)
+    {
+        var muscle = await _repository.GetByIdAsync(id);
+        if (muscle == null)
+            return null;
+        return MapToDTO(muscle);
+    }
+
     public async Task<MuscleDTO> CreateAsync(CreateMuscleDTO dto)
     {
         if (await _repository.ExistsByNameAsync(dto.Name))
@@ -41,4 +49,13 @@ public class MuscleService
     }
 
     public async Task DeleteAsync(Guid id) => await _repository.DeleteAsync(id);
+
+    private static MuscleDTO MapToDTO (Muscle muscle)
+    {
+        return new MuscleDTO
+        {
+            Id = muscle.Id,
+            Name = muscle.Name
+        };
+    }
 }

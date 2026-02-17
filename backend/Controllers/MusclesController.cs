@@ -8,11 +8,12 @@ namespace backend.Controllers;
 [ApiController]
 [Route("api/muscles")]
 [Authorize]
-public class MuscleController : ControllerBase
+public class MusclesController : BaseApiController
 {
     private readonly MuscleService _service;
-    public MuscleController(MuscleService service) => _service = service;
+    public MusclesController(MuscleService service) => _service = service;
 
+    // GET /api/muscles
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -20,6 +21,17 @@ public class MuscleController : ControllerBase
         return Ok(result);
     }
 
+    // GET /api/muscles/{id}
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var muscle = await _service.GetByIdAsync(id);
+        if (muscle == null)
+            return NotFound(new { message = "Muscle not found" });
+        return Ok(muscle);
+    }
+
+    // POST /api/muscles
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateMuscleDTO dto)
     {
@@ -27,7 +39,8 @@ public class MuscleController : ControllerBase
         catch (Exception e) { return BadRequest(new { message = e.Message }); }
     }
 
-    [HttpPut("{id}")]
+    // PUT /api/muscles/{id}
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMuscleDTO dto)
     {
         try { return Ok(await _service.UpdateAsync(id, dto)); }
@@ -35,11 +48,11 @@ public class MuscleController : ControllerBase
         catch (InvalidOperationException e) { return BadRequest(new { message = e.Message }); }
     }
 
-    [HttpDelete("{id}")]
+    // DELETE /api/muscles/{id}
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _service.DeleteAsync(id);
         return NoContent();
     }
-
 }

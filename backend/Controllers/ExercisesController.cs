@@ -2,47 +2,44 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using backend.Application.Services;
 using backend.Application.DTOs;
-using System.Security.Claims;
+using Microsoft.VisualBasic;
 
 namespace backend.Controllers;
 
 [ApiController]
 [Route("api/exercises")]
 [Authorize]
-public class ExerciseController : ControllerBase
+public class ExercisesController : BaseApiController
 {
     private readonly ExerciseService _service;
-    public ExerciseController(ExerciseService service) => _service = service;
+    public ExercisesController(ExerciseService service) => _service = service;
 
-    private Guid GetUserId()
-    {
-        return Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-    }
-
+    // GET /api/exercises
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserId();
         var result = await _service.GetAllByUserIdAsync(userId);
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    // GET /api/exercises/{id}
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var userId = GetUserId();
         var exercise = await _service.GetByIdAsync(userId, id);
-
         if (exercise == null)
             return NotFound(new { message = "Exercise not found" });
 
         return Ok(exercise);
     }
 
+    // POST /api/exercises
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateExerciseDTO dto)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserId();
         var exercise = await _service.CreateAsync(userId, dto);
         return CreatedAtAction(
             nameof(GetById),
@@ -51,24 +48,23 @@ public class ExerciseController : ControllerBase
         );
     }
 
-    [HttpPut("{id}")]
+    // PUT /api/exercises/{id}
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateExerciseDTO dto)
     {
-        var updated = await _service.UpdateAsync(id, dto);
-
+        var userId = GetUserId();
+        var updated = await _service.UpdateAsync(userId, id, dto);
         if (updated == null)
             return NotFound(new { message = "Exercise not found" });
-
         return Ok(updated);
     }
 
-    [HttpDelete("{id}")]
+    // DELETE /api/exercises/{id}
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var userId = GetUserId();
-
-        await _service.DeleteAsync(id);
-
+        await _service.DeleteAsync(userId, id);
         return NoContent();
     }
 }

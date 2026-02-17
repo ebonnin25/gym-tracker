@@ -8,7 +8,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public class UsersController : ControllerBase
+public class UsersController : BaseApiController
 {
     private readonly UserService _userService;
     private readonly AuthService _authService;

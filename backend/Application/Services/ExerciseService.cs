@@ -29,10 +29,10 @@ public class ExerciseService
     public async Task<ExerciseDTO?> GetByIdAsync(Guid userId, Guid exerciseId)
     {
         var exercise = await _repository.GetByIdWithMusclesAsync(exerciseId);
-
-        if (exercise == null || exercise.UserId != userId)
+        if(exercise == null)
             return null;
-
+        if (exercise.UserId != userId)
+            throw new UnauthorizedAccessException();
         return new ExerciseDTO
         {
             Id = exercise.Id,
@@ -84,14 +84,15 @@ public class ExerciseService
         };
     }
 
-    public async Task<ExerciseDTO> UpdateAsync(Guid exerciseId, UpdateExerciseDTO dto)
+    public async Task<ExerciseDTO> UpdateAsync(Guid userId, Guid exerciseId, UpdateExerciseDTO dto)
     {
         var exercise = await _repository.GetByIdWithMusclesAsync(exerciseId)
             ?? throw new KeyNotFoundException("Exercise not found.");
-
+        
+        if (exercise.UserId != userId)
+            throw new UnauthorizedAccessException();
         if(await _repository.ExistsByNameAsync(exercise.UserId, dto.Name, exerciseId))
             throw new InvalidOperationException("The name of the exercise already exists.");
-
         if(dto.MuscleIds == null || !dto.MuscleIds.Any())
             throw new InvalidOperationException("At least one muscle must be selected.");
         if(dto.MuscleIds.Distinct().Count() != dto.MuscleIds.Count)
@@ -125,12 +126,13 @@ public class ExerciseService
         };
     }
 
-    public async Task DeleteAsync(Guid exerciseId)
+    public async Task DeleteAsync(Guid userId, Guid exerciseId)
     {
         var exercise = await _repository.GetByIdAsync(exerciseId);
         if(exercise == null)
             throw new KeyNotFoundException("Exercise not found.");
-
+        if (exercise.UserId != userId)
+            throw new UnauthorizedAccessException();
         await _repository.DeleteAsync(exerciseId);
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using backend.Infrastructure.Persistence;
 namespace backend.Migrations
 {
     [DbContext(typeof(GymContext))]
-    partial class GymContextModelSnapshot : ModelSnapshot
+    [Migration("20260217160323_AddSession")]
+    partial class AddSession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
