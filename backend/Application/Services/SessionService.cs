@@ -1,3 +1,4 @@
+using System.Diagnostics.Tracing;
 using backend.Application.DTOs;
 using backend.Domain.Entities;
 using backend.Domain.Repositories;
@@ -30,9 +31,6 @@ public class SessionService
 
     public async Task<SessionDTO> CreateAsync(Guid userId, CreateSessionDTO dto)
     {
-        if (dto.Exercises == null || !dto.Exercises.Any())
-            throw new InvalidOperationException("A session must contain at least one exercise.");
-
         var session = new Session
         {
             UserId = userId,
@@ -40,16 +38,25 @@ public class SessionService
             Details = dto.Details
         };
 
-        foreach (var ex in dto.Exercises)
+        if (dto.Exercises != null) foreach (var ex in dto.Exercises)
         {
-            session.SessionExercises.Add(new SessionExercise
+            var sessionExercise = new SessionExercise
             {
                 ExerciseId = ex.ExerciseId,
-                Sets = ex.Sets,
-                Reps = ex.Reps,
-                Weight = ex.Weight,
                 Order = ex.Order
-            });
+            };
+
+            if (ex.Sets != null) foreach (var set in ex.Sets)
+            {
+                sessionExercise.Sets.Add(new SessionSet
+                {
+                    Reps = set.Reps,
+                    Weight = set.Weight,
+                    Order = set.Order
+                });
+            }
+
+            session.SessionExercises.Add(sessionExercise);
         }
 
         var created = await _repository.AddAsync(session);
@@ -69,16 +76,25 @@ public class SessionService
         session.Details = dto.Details;
         session.SessionExercises.Clear();
 
-        foreach (var ex in dto.Exercises)
+        if (dto.Exercises != null) foreach (var ex in dto.Exercises)
         {
-            session.SessionExercises.Add(new SessionExercise
+            var sessionExercise = new SessionExercise
             {
                 ExerciseId = ex.ExerciseId,
-                Sets = ex.Sets,
-                Reps = ex.Reps,
-                Weight = ex.Weight,
                 Order = ex.Order
-            });
+            };
+
+            if (ex.Sets != null) foreach (var set in ex.Sets)
+            {
+                sessionExercise.Sets.Add(new SessionSet
+                {
+                    Reps = set.Reps,
+                    Weight = set.Weight,
+                    Order = set.Order
+                });
+            }
+            
+            session.SessionExercises.Add(sessionExercise);
         }
 
         var updated = await _repository.UpdateAsync(session);
@@ -108,10 +124,15 @@ public class SessionService
                 {
                     ExerciseId = se.ExerciseId,
                     ExerciseName = se.Exercise.Name,
-                    Sets = se.Sets,
-                    Reps = se.Reps,
-                    Weight = se.Weight,
-                    Order = se.Order
+                    Order = se.Order,
+                    Sets = se.Sets
+                        .OrderBy(s => s.Order)
+                        .Select(s => new SessionSetDTO
+                        {
+                            Reps = s.Reps,
+                            Weight = s.Weight,
+                            Order = s.Order
+                        }).ToList()
                 }).ToList()
         };
     }

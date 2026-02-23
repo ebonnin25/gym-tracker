@@ -13,39 +13,63 @@ public class GymContext : DbContext
     public DbSet<ExerciseMuscle> ExerciseMuscles => Set<ExerciseMuscle>();
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<SessionExercise> SessionExercises => Set<SessionExercise>();
+    public DbSet<SessionSet> SessionSets => Set<SessionSet>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // ExerciseMuscle : many-to-many
+        // User constraints
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Exercises)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Sessions)
+            .WithOne(s => s.User)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Exercise - Muscle : many-to-many
         modelBuilder.Entity<ExerciseMuscle>()
             .HasKey(em => new { em.ExerciseId, em.MuscleId });
         modelBuilder.Entity<ExerciseMuscle>()
             .HasOne(em => em.Exercise)
             .WithMany(e => e.ExerciseMuscles)
-            .HasForeignKey(em => em.ExerciseId);
+            .HasForeignKey(em => em.ExerciseId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<ExerciseMuscle>()
             .HasOne(em => em.Muscle)
             .WithMany(m => m.ExerciseMuscles)
-            .HasForeignKey(em => em.MuscleId);
+            .HasForeignKey(em => em.MuscleId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        // SessionExercise : many-to-many + payload
+        // Session - Exercise : many-to-many + payload
         modelBuilder.Entity<SessionExercise>()
             .HasKey(se => new { se.SessionId, se.ExerciseId });
         modelBuilder.Entity<SessionExercise>()
             .HasOne(se => se.Session)
             .WithMany(s => s.SessionExercises)
-            .HasForeignKey(se => se.SessionId);
+            .HasForeignKey(se => se.SessionId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<SessionExercise>()
             .HasOne(se => se.Exercise)
             .WithMany()
-            .HasForeignKey(se => se.ExerciseId);
+            .HasForeignKey(se => se.ExerciseId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        // User constraints
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
+        // SessionExercise - Set : one to many
+        modelBuilder.Entity<SessionSet>()
+            .HasKey(ss => ss.Id);
+        modelBuilder.Entity<SessionSet>()
+            .HasOne(ss => ss.SessionExercise)
+            .WithMany(se => se.Sets)
+            .HasForeignKey(ss => new { ss.SessionId, ss.ExerciseId })
+            .OnDelete(DeleteBehavior.Cascade);
 
         // seed muscles with fixed guid
         modelBuilder.Entity<Muscle>().HasData(

@@ -19,6 +19,8 @@ public class SessionRepository : ISessionRepository
             .Where(s => s.UserId == userId)
             .Include(s => s.SessionExercises)
                 .ThenInclude(se => se.Exercise)
+            .Include(s => s.SessionExercises)
+                .ThenInclude(se => se.Sets)
             .ToListAsync();
     }
 
@@ -27,6 +29,8 @@ public class SessionRepository : ISessionRepository
         return await _context.Sessions
             .Include(s => s.SessionExercises)
                 .ThenInclude(se => se.Exercise)
+            .Include(s => s.SessionExercises)
+                .ThenInclude(se => se.Sets)
             .FirstOrDefaultAsync(s => s.Id == sessionId);
     }
 

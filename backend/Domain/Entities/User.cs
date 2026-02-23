@@ -6,8 +6,8 @@ public class User
     public string Username { get; private set; }
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
-
     public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
+    public ICollection<Session> Sessions { get; set; } = new List<Session>();
 
     private User() { }
 
