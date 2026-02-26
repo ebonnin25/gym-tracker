@@ -17,6 +17,10 @@ http://localhost:5134/swagger/index.html
 run : `dotnet run`  
 run with hotreload : `dotnet watch run`
 
+### FRONTEND
+run : `npm run dev`  
+add shadcn component : `npx shadcn@latest add componentName`
+
 ### DATABASE
 connecting bd : `psql -U postgres -h localhost -d gym` (mdp: azertt)  
 show databases : `\list`  
