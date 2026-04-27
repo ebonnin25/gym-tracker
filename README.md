@@ -13,6 +13,8 @@ http://localhost:5134/swagger/index.html
 
 ## MEMO COMMANDS
 
+user test : elo@mail.com / azerty
+
 ### BACKEND
 run : `dotnet run`  
 run with hotreload : `dotnet watch run`
@@ -22,7 +24,7 @@ run : `npm run dev`
 add shadcn component : `npx shadcn@latest add componentName`
 
 ### DATABASE
-connecting bd : `psql -U postgres -h localhost -d gym` (mdp: azertt)  
+connecting bd : `psql -U postgres -h localhost -d gym` (mdp: azerty)  
 show databases : `\list`  
 show tables : `\dt`  
 show columns of a table : `\d "TableName"`  
@@ -67,14 +69,17 @@ backend/
 │   │   ├─ SessionSetDTO.cs  
 │   │   ├─ UpdateExerciseDTO.cs  
 │   │   ├─ UpdateMuscleDTO.cs  
+│   │   ├─ UpdateSessionDTO.cs  
 │   │   └─ UserDTO.cs  
 │   └─ Services/  
 │       ├─ AuthService.cs  
 │       ├─ ExerciseService.cs  
 │       ├─ MuscleService.cs  
+│       ├─ SessionService.cs  
 │       └─ UserService.cs  
 │  
 ├─ Controllers/  
+│   ├─ BaseApiController.cs  
 │   ├─ ExercisesController.cs  
 │   ├─ MusclesController.cs  
 │   ├─ SessionsController.cs  
@@ -95,7 +100,7 @@ backend/
 │       ├─ ISessionRepository.cs  
 │       └─ IUserRepository.cs  
 │  
-├─ Infrastructure  
+├─ Infrastructure/  
 │   └─ Persistence/  
 │       ├─ ExerciseRepository.cs  
 │       ├─ GymContext.cs  
@@ -104,6 +109,48 @@ backend/
 │       └─ UserRepository.cs  
 │  
 ├─ Program.cs  
+
+
+
+
+frontend/  
+├─ node_modules  
+├─ public  
+├─ src  
+│   ├─ api/  
+│   │   ├─ api-clients.ts  
+│   │   ├─ auth.api.ts  
+│   │   └─ user.api.ts  
+│   ├─ app/  
+│   │   ├─ auth/  
+│   │   │   ├─ auth-context.ts  
+│   │   │   ├─ auth-provider.tsx  
+│   │   │   └─ use-auth.ts  
+│   │   ├─ App.tsx  
+│   │   └─ router.tsx  
+│   ├─ components/  
+│   │   ├─ auth/  
+│   │   │   └─ ProtectedRoute.tsx  
+│   │   ├─ features/  
+│   │   ├─ layout/  
+│   │   │   ├─ BottomNav.tsx  
+│   │   │   └─ Header.tsx  
+│   │   └─ ui/  
+│   ├─ lib/  
+│   │   └─ utils.ts  
+│   ├─ pages/  
+│   │   ├─ ExercisesPage.tsx  
+│   │   ├─ HistoryPage.tsx  
+│   │   ├─ HomePage.tsx  
+│   │   ├─ LoginPage.tsx  
+│   │   ├─ ProfilePage.tsx  
+│   │   └─ StatsPage.tsx  
+│   ├─ styles/  
+│   │   └─ theme.css  
+│   ├─ types/  
+│   │   └─ auth.ts  
+│   ├─ index.css  
+│   └─ main.tsx  
 
 
 # Fondamentaux du projet

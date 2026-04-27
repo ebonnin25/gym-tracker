@@ -1,10 +1,13 @@
+import { useAuth } from "@/app/auth/use-auth"
 import { Button } from "@/components/ui/button"
 
 export default function HomePage() {
+  const { user } = useAuth()
+
   return (
     <div className="flex flex-col items-center justify-center text-center gap-6 py-20">
       <h1 className="text-4xl font-bold tracking-tight">
-        Welcome to GymTracker
+        Welcome to GymTracker {user?.username}
       </h1>
 
       <p className="text-muted-foreground max-w-xl">
