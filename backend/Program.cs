@@ -27,10 +27,10 @@ builder.Services.AddScoped<SessionService>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
+    options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // port Vite
+            policy.AllowAnyOrigin() // to allow the connection by the phone on network
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -93,7 +93,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {
@@ -108,4 +108,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run("http://0.0.0.0:5134");

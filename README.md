@@ -21,6 +21,7 @@ run with hotreload : `dotnet watch run`
 
 ### FRONTEND
 run : `npm run dev`  
+to expode : `npm run dev -- --host`  
 add shadcn component : `npx shadcn@latest add componentName`
 
 ### DATABASE

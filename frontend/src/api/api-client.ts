@@ -1,6 +1,6 @@
 import { AuthResponse } from "@/types/auth"
 
-const API_URL = "http://localhost:5134/api"
+const API_URL = "http://192.168.1.65:5134/api"
 
 export async function apiFetch(
   endpoint: string,
